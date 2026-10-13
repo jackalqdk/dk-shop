@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Checkout | DK Shoes</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+    .checkout-container {
+        max-width: 850px;
+        margin: 35px auto;
+        padding: 25px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkout-container h1,
+    .checkout-container h2 {
+        color: #654321;
+    }
+
+    .checkout-container h1 {
+        margin-bottom: 25px;
+    }
+
+    .checkout-container label {
+        display: block;
+        margin-top: 16px;
+        font-weight: bold;
+    }
+
+    .checkout-container input,
+    .checkout-container textarea,
+    .checkout-container select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 15px;
+    }
+
+    .checkout-container input:focus,
+    .checkout-container textarea:focus,
+    .checkout-container select:focus {
+        outline: 2px solid #315b9b;
+        border-color: #315b9b;
+    }
+
+    .order-summary {
+        background: #f8f5f0;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-radius: 10px;
+    }
+
+    .order-item {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 15px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .order-item img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        background: #fff;
+        border-radius: 8px;
+    }
+
+    .order-item-details {
+        flex: 1;
+    }
+
+    .order-item-details h3 {
+        margin: 0 0 8px;
+        color: #333;
+    }
+
+    .order-item-details p {
+        margin: 5px 0;
+    }
+
+    .order-total {
+        color: #315b9b;
+        margin-top: 20px;
+        font-size: 24px;
+    }
+
+    .place-order-button {
+        width: 100%;
+        margin-top: 25px;
+        padding: 15px;
+        background: #654321;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .place-order-button:hover {
+        background: #315b9b;
+    }
+
+    .empty-cart {
+        padding: 25px;
+        text-align: center;
+    }
+
+    .continue-shopping {
+        display: inline-block;
+        margin-top: 15px;
+        color: #315b9b;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+        .checkout-container {
+            margin: 15px;
+            padding: 18px;
+        }
+
+        .order-item {
+            gap: 12px;
+        }
+
+        .order-item img {
+            width: 75px;
+            height: 75px;
+        }
+
+        .order-total {
+            font-size: 21px;
+        }
+    }
+</style>
+
+
+</head>
+
+<body>
+
+<header class="main-header">
+    <a href="{{ url_for('home') }}" class="logo">
+        DK <span>SHOES</span>
+    </a>
+
+
+<nav>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('shop') }}">Shop</a>
+    <a href="{{ url_for('account') }}">Account</a>
+    <a href="{{ url_for('cart') }}">🛒 Cart</a>
+</nav>
+
+
+</header>
+
+<main class="checkout-container">
+
+
+<h1>Checkout</h1>
+
+{% if products %}
+
+    <section class="order-summary">
+        <h2>Your Order</h2>
+
+        {% for item in products %}
+
+            <div class="order-item">
+
+                {% if item.product.image %}
+                    <img
+                        src="{{ url_for('static', filename='images/' + item.product.image) }}"
+                        alt="{{ item.product.name }}"
+                    >
+                {% endif %}
+
+                <div class="order-item-details">
+
+                    <h3>{{ item.product.name }}</h3>
+
+                    <p>
+                        Unit price:
+                        ₦{{ "{:,.2f}".format(item.product.price|float) }}
+                    </p>
+
+                    <p>Quantity: {{ item.quantity }}</p>
+
+                    <strong>
+                        Subtotal:
+                        ₦{{ "{:,.2f}".format(item.subtotal|float) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+        <h2 class="order-total">
+            Total: ₦{{ "{:,.2f}".format(total|float) }}
+        </h2>
+
+    </section>
+
+    <p>Enter your delivery details. DK Shoes delivers across Nigeria.</p>
+
+    <form method="POST" action="{{ url_for('checkout') }}">
+
+        <label for="customer_name">Full Name</label>
+        <input
+            type="text"
+            id="customer_name"
+            name="customer_name"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+        >
+
+        <label for="phone">Phone Number</label>
+        <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Enter your phone number"
+            autocomplete="tel"
+            required
+        >
+
+        <label for="address">Delivery Address</label>
+        <textarea
+            id="address"
+            name="address"
+            rows="4"
+            placeholder="House number, street, city and state"
+            autocomplete="street-address"
+            required
+        ></textarea>
+
+        <label for="payment_method">Payment Method</label>
+        <select
+            id="payment_method"
+            name="payment_method"
+            required
+        >
+            <option value="">Choose a payment method</option>
+            <option value="Pay on Delivery">Pay on Delivery</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+        </select>
+
+        <button type="submit" class="place-order-button">
+            Place Order — ₦{{ "{:,.2f}".format(total|float) }}
+        </button>
+
+    </form>
+
+{% else %}
+
+    <div class="empty-cart">
+        <h2>Your cart is empty!</h2>
+        <p>Add some shoes before proceeding to checkout.</p>
+
+        <a href="{{ url_for('shop') }}" class="continue-shopping">
+            ← Continue Shopping
+        </a>
+    </div>
+
+{% endif %}
+
+</main>
+
+<footer class="footer">
+    <h3>DK SHOES</h3>
+    <p>DAN KABO SHOES Nig. Ltd.</p>
+    <p>Kano, Zoo Road, Amana Plaza, Nigeria</p>
+    <p>WhatsApp: 09072488838</p>
+    <p>© 2026 DAN KABO SHOES Nig. Ltd.</p>
+</footer>
+
+</body>
+</html>

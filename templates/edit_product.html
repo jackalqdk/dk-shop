@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Product | DK Shoes</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+    body {
+        background: #f5f5f5;
+        font-family: Arial, sans-serif;
+    }
+
+    .edit-container {
+        max-width: 650px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .edit-container h1 {
+        color: #654321;
+        margin-bottom: 10px;
+    }
+
+    .edit-container p {
+        color: #555;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .current-image {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        display: block;
+        margin: 10px 0;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 8px;
+    }
+
+    .save-button,
+    .cancel-button {
+        display: inline-block;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .save-button {
+        background: #654321;
+        color: white;
+    }
+
+    .save-button:hover {
+        background: #463017;
+    }
+
+    .cancel-button {
+        background: #ddd;
+        color: #222;
+        margin-left: 8px;
+    }
+
+    @media (max-width: 700px) {
+        .edit-container {
+            margin: 20px 12px;
+            padding: 20px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<header class="main-header">
+    <div class="logo">DK SHOES</div>
+
+
+<nav>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('shop') }}">Shop</a>
+    <a href="{{ url_for('account') }}">Account</a>
+    <a href="{{ url_for('admin') }}">Admin Dashboard</a>
+</nav>
+
+</header>
+
+<main class="edit-container">
+
+    <h1>Edit Product</h1>
+<p>Update the product information for your DK Shoes store.</p>
+
+<form method="POST" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label for="name">Product Name</label>
+        <input
+            type="text"
+            id="name"
+            name="name"
+            value="{{ product.name }}"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price (₦)</label>
+        <input
+            type="number"
+            id="price"
+            name="price"
+            min="0"
+            step="0.01"
+            value="{{ product.price }}"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="description">Product Description</label>
+        <textarea
+            id="description"
+            name="description"
+        >{{ product.description or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Current Product Image</label>
+
+        {% if product.image %}
+            <img
+                class="current-image"
+                src="{{ url_for('static', filename='images/' + product.image) }}"
+                alt="{{ product.name }}"
+            >
+        {% else %}
+            <p>No image uploaded for this product.</p>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        <label for="image">Choose a New Image (Optional)</label>
+        <input
+            type="file"
+            id="image"
+            name="image"
+            accept=".jpg,.jpeg,.png,.webp"
+        >
+        <small>Leave this empty to keep the current image.</small>
+    </div>
+
+    <button type="submit" class="save-button">
+        Save Changes
+    </button>
+
+    <a href="{{ url_for('admin') }}" class="cancel-button">
+        Cancel
+    </a>
+
+</form>
+
+</main>
+
+<footer>
+    <h3>DK Shoes</h3>
+    <p>Kano, Zoo Road, Amana Plaza</p>
+    <p>WhatsApp: 09072488838</p>
+    <p>© 2026 DAN KABO SHOES Nig. Ltd.</p>
+</footer>
+
+</body>
+</html>

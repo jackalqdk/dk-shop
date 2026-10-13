@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Orders | DK Shoes</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f5f7;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .topbar {
+            background: #654321;
+            color: white;
+            padding: 17px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .navigation a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .navigation a:hover {
+            color: #ffd699;
+        }
+
+        .page {
+            max-width: 1150px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .welcome {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            color: #654321;
+            margin-top: 0;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 8px #ddd;
+            overflow-wrap: anywhere;
+        }
+
+        .order-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .order-heading h2 {
+            color: #654321;
+            margin: 0;
+        }
+
+        .status {
+            display: inline-block;
+            background: #fff0cc;
+            color: #805500;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .order-details {
+            line-height: 1.9;
+            margin-top: 15px;
+        }
+
+        .order-total {
+            font-size: 21px;
+            font-weight: bold;
+            color: #654321;
+        }
+
+        .status-form {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #eee;
+        }
+
+        .status-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .status-form select {
+            padding: 12px;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 8px;
+            margin-bottom: 10px;
+        }
+
+        .update-button {
+            padding: 12px 18px;
+            background: #654321;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .update-button:hover {
+            background: #4a3018;
+        }
+
+        .empty-orders {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .navigation {
+                gap: 14px;
+            }
+
+            .page {
+                padding: 12px;
+            }
+
+            .order-card {
+                padding: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">DK SHOES</div>
+
+    <nav class="navigation">
+        <a href="/">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/categories">Categories</a>
+        <a href="/cart">Cart</a>
+        <a href="/account">My Account</a>
+        <a href="/admin">Dashboard</a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <section class="welcome">
+        <h1>Customer Orders</h1>
+        <p>View customer purchases and manage their order status.</p>
+    </section>
+
+    {% for order in orders %}
+
+    <section class="order-card">
+
+        <div class="order-heading">
+            <h2>Order #{{ order.id }}</h2>
+
+            <span class="status">
+                {{ order.status or "Pending" }}
+            </span>
+        </div>
+
+        <div class="order-details">
+            <p>
+                <strong>Customer:</strong>
+                {{ order.customer_name }}
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                {{ order.phone }}
+            </p>
+
+            <p>
+                <strong>Delivery Address:</strong>
+                {{ order.address }}
+            </p>
+
+            <p>
+                <strong>Items:</strong>
+                {{ order.items }}
+            </p>
+
+            <p class="order-total">
+                Total: ₦{{ "{:,.2f}".format(order.total|float) }}
+            </p>
+
+            <p>
+                <strong>Payment Method:</strong>
+                {{ order.payment_method }}
+            </p>
+
+            <p>
+                <strong>Current Status:</strong>
+                {{ order.status or "Pending" }}
+            </p>
+        </div>
+
+        <form class="status-form"
+              method="POST"
+              action="/admin/orders/{{ order.id }}/status">
+
+            <label for="status-{{ order.id }}">
+                Update Order Status
+            </label>
+
+            <select id="status-{{ order.id }}" name="status" required>
+                <option value="Pending"
+                    {% if order.status == "Pending" %}selected{% endif %}>
+                    Pending
+                </option>
+
+                <option value="Processing"
+                    {% if order.status == "Processing" %}selected{% endif %}>
+                    Processing
+                </option>
+
+                <option value="Shipped"
+                    {% if order.status == "Shipped" %}selected{% endif %}>
+                    Shipped
+                </option>
+
+                <option value="Delivered"
+                    {% if order.status == "Delivered" %}selected{% endif %}>
+                    Delivered
+                </option>
+
+                <option value="Cancelled"
+                    {% if order.status == "Cancelled" %}selected{% endif %}>
+                    Cancelled
+                </option>
+            </select>
+
+            <button class="update-button" type="submit">
+                Update Status
+            </button>
+
+        </form>
+
+    </section>
+
+    {% else %}
+
+    <section class="empty-orders">
+        <h2>No Orders Yet</h2>
+        <p>Customer orders will appear here when customers purchase shoes.</p>
+    </section>
+
+    {% endfor %}
+
+</main>
+
+<footer>
+    <h3>DAN KABO SHOES Nig. Ltd.</h3>
+    <p>Kano, Zoo Road, Amana Plaza</p>
+    <p>WhatsApp: 09072488838</p>
+    <p>&copy; 2026 DK Shoes. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

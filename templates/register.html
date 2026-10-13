@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DK Shoes - Create Account</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="main-header">
+
+    <div class="logo">DK SHOES</div>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/categories">Categories</a>
+        <a href="/cart">🛒 Cart</a>
+        <a href="/account">Account</a>
+    </nav>
+
+</header>
+
+<section class="section">
+
+    <h1>Create Your Account</h1>
+
+    <form action="{{ url_for('register') }}" method="POST">
+
+        <p>
+            <input type="text" name="name" placeholder="Full name" required>
+        </p>
+
+        <p>
+            <input type="email" name="email" placeholder="Email address" required>
+        </p>
+
+        <p>
+            <input type="password" name="password" placeholder="Password" required>
+        </p>
+
+        <button type="submit">CREATE ACCOUNT</button>
+
+    </form>
+
+    <p>
+        Already have an account?
+        <a href="{{ url_for('login') }}">Login</a>
+    </p>
+
+</section>
+
+<footer>
+
+    <h3>DK Shoes</h3>
+    <p>Kano, Zoo Road, Amana Plaza</p>
+    <p>WhatsApp: 09072488838</p>
+    <p>© 2026 DAN KABO SHOES Nig. Ltd.</p>
+
+</footer>
+
+</body>
+</html>

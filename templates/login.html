@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Login | DK Shoes</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #f5f3ef;
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    .login-box {
+        width: calc(100% - 30px);
+        max-width: 450px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 5px 22px rgba(0,0,0,0.09);
+    }
+
+    .brand {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        color: #654321;
+    }
+
+    .brand span {
+        color: #315b9b;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 25px;
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #777;
+        margin-bottom: 25px;
+    }
+
+    .login-box label {
+        display: block;
+        margin: 16px 0 7px;
+        font-weight: bold;
+    }
+
+    .login-box input[type="email"],
+    .login-box input[type="password"],
+
+    .login-box input[type="text"] {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+    }
+
+    .password-wrap {
+        position: relative;
+    }
+
+    .password-wrap input {
+        padding-right: 65px !important;
+    }
+
+    .show-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        color: #315b9b;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .login-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-top: 16px;
+        font-size: 13px;
+    }
+
+    .remember {
+        display: flex !important;
+        align-items: center;
+        gap: 6px;
+        margin: 0 !important;
+        font-weight: normal !important;
+    }
+
+    a {
+        color: #315b9b;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .login-button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 22px;
+        background: #654321;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .login-button:hover {
+        background: #4d3219;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 24px 0 18px;
+        color: #777;
+        font-size: 12px;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: "";
+        height: 1px;
+        flex: 1;
+        background: #ddd;
+    }
+
+    .social-login {
+        display: grid;
+        gap: 12px;
+    }
+
+    .social-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        min-height: 48px;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        background: white;
+        color: #333;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .social-button:hover {
+        background: #f4f4f4;
+        text-decoration: none;
+    }
+
+    .social-icon {
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .google-icon {
+        color: #4285F4;
+    }
+
+    .facebook-icon {
+        color: #1877F2;
+    }
+
+    .apple-icon {
+        color: #000;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 22px;
+        line-height: 1.8;
+    }
+
+    .messages {
+        margin: 15px 0;
+    }
+
+    .message {
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        background: #fff0f0;
+        color: #a12626;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px 15px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    @media (max-width: 500px) {
+        .login-box {
+            padding: 22px;
+            margin: 25px auto;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<header class="main-header">
+    <a href="{{ url_for('home') }}" class="logo">
+        DK <span>SHOES</span>
+    </a>
+
+
+<nav>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('shop') }}">Shop</a>
+    <a href="{{ url_for('cart') }}">🛒 Cart</a>
+</nav>
+
+
+</header>
+
+<main class="login-box">
+
+
+<div class="brand">DK <span>SHOES</span></div>
+
+<h1>Welcome Back!</h1>
+
+<p class="subtitle">Log in to continue shopping.</p>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('login') }}">
+
+    <label for="email">Email Address</label>
+
+    <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Enter your email address"
+        autocomplete="email"
+        required
+    >
+
+    <label for="password">Password</label>
+
+    <div class="password-wrap">
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+        >
+
+        <icon
+            type="icon"
+            class="show-password"
+            id="togglePassword"
+        >Show</icon>
+    </div>
+
+    <div class="login-options">
+        <label class="remember">
+            <input type="checkbox" name="remember" value="yes">
+            Remember me
+        </label>
+
+        <a href="/forgot-password">Forgot password?</a>
+    </div>
+
+    <button type="submit" class="login-button">
+        LOGIN
+    </button>
+
+</form>
+
+<div class="divider">OR CONTINUE WITH</div>
+
+<div class="social-login">
+
+    <a href="/login/google" class="social-button">
+        <span class="social-icon google-icon">G</span>
+        <span>Continue with Google</span>
+    </a>
+
+    <a href="/login/facebook" class="social-button">
+        <span class="social-icon facebook-icon">f</span>
+        <span>Continue with Facebook</span>
+    </a>
+
+    <a href="/login/apple" class="social-button">
+        <span class="social-icon apple-icon">●</span>
+        <span>Continue with Apple</span>
+    </a>
+
+</div>
+
+<div class="register-link">
+    <p>
+        Don't have an account?
+        <a href="/register"><strong>Create one</strong></a>
+    </p>
+
+    <p><a href="/">← Back to Home</a></p>
+</div>
+
+</main>
+
+<footer>
+    <h3>DK SHOES</h3>
+    <p>DAN KABO SHOES Nig. Ltd.</p>
+    <p>Kano, Zoo Road, Amana Plaza, Nigeria</p>
+    <p>WhatsApp: 09072488838</p>
+    <p>© 2026 DK Shoes</p>
+</footer>
+
+<script>
+    const passwordInput = document.getElementById("password");
+    const toggleButton = document.getElementById("togglePassword");
+
+    toggleButton.addEventListener("click", function () {
+        const hidden = passwordInput.type === "password";
+
+        passwordInput.type = hidden ? "text" : "password";
+        toggleButton.textContent = hidden ? "Hide" : "Show";
+    });
+</script>
+
+</body>
+</html>

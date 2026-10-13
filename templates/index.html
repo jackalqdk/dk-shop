@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>DK Shoes | DAN KABO SHOES Nig. Ltd.</title>
+    <meta name="description" content="Discover quality shoes at DK Shoes. Shop men's shoes, women's shoes, slippers and sandals, with delivery across Nigeria.">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- PROMOTION BAR -->
+    <div class="top-bar">
+        Welcome to DK Shoes — Quality Footwear, Delivered Across Nigeria!
+    </div>
+
+    <!-- MAIN HEADER -->
+    <header class="main-header">
+
+        <a href="{{ url_for('home') }}" class="logo">
+            DK <span>SHOES</span>
+        </a>
+
+        <!-- SEARCH -->
+        <form class="search-bar" action="{{ url_for('shop') }}" method="GET">
+            <input
+                type="search"
+                name="q"
+                placeholder="Search for shoes, slippers and sandals..."
+                aria-label="Search for shoes"
+            >
+            <button type="submit">SEARCH</button>
+        </form>
+
+        <!-- HEADER LINKS -->
+        <div class="header-actions">
+            <a href="{{ url_for('account') }}">👤 Account</a>
+            <a href="{{ url_for('cart') }}">🛒 Cart</a>
+        </div>
+
+    </header>
+
+    <!-- NAVIGATION -->
+    <div class="navbar">
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('shop') }}">Shop</a>
+            <a href="{{ url_for('categories') }}">Categories</a>
+            <a href="{{ url_for('account') }}">My Account</a>
+        </nav>
+    </div>
+
+    <!-- FLASH MESSAGES -->
+    <main class="container">
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- HERO BANNER -->
+        <section class="hero">
+
+            <div>
+                <p>WELCOME TO DK SHOES</p>
+
+                <h1>Step Into Quality.<br>Walk With Confidence.</h1>
+
+                <p>
+                    Discover quality footwear for every occasion.
+                    Find your next favourite pair at DK Shoes.
+                </p>
+
+                <a href="{{ url_for('shop') }}" class="shop-button">
+                    SHOP NOW →
+                </a>
+            </div>
+
+        </section>
+
+        <!-- CATEGORIES -->
+        <section class="section">
+
+            <h2 class="section-title">Shop by Category</h2>
+
+            <div class="categories">
+
+                <div class="category">
+                    <h3>👞 Men's Shoes</h3>
+                    <p>Footwear for work and everyday style.</p>
+                    <a href="{{ url_for('shop') }}?category=men">
+                        Shop Men's Shoes →
+                    </a>
+                </div>
+
+                <div class="category">
+                    <h3>👠 Women's Shoes</h3>
+                    <p>Explore footwear for every occasion.</p>
+                    <a href="{{ url_for('shop') }}?category=women">
+                        Shop Women's Shoes →
+                    </a>
+                </div>
+
+                <div class="category">
+                    <h3>🩴 Slippers</h3>
+                    <p>Comfort for your everyday activities.</p>
+                    <a href="{{ url_for('shop') }}?category=slippers">
+                        Shop Slippers →
+                    </a>
+                </div>
+
+                <div class="category">
+                    <h3>👟 Sandals</h3>
+                    <p>Discover versatile everyday footwear.</p>
+                    <a href="{{ url_for('shop') }}?category=sandals">
+                        Shop Sandals →
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- FEATURED PRODUCTS -->
+        <section class="section">
+
+            <h2 class="section-title">Featured Shoes</h2>
+
+            <div class="products">
+
+                {% for product in products %}
+
+                    <article class="product">
+
+                        <a href="{{ url_for('shop') }}"
+                           aria-label="Browse {{ product.name }}">
+
+                            {% if product.image %}
+                                <img
+                                    class="product-image"
+                                    src="{{ url_for('static', filename='images/' + product.image) }}"
+                                    alt="{{ product.name }}"
+                                    loading="lazy"
+                                >
+                            {% else %}
+                                <div class="product-image"
+                                     role="img"
+                                     aria-label="No product image available">
+                                    👟
+                                </div>
+                            {% endif %}
+
+                        </a>
+
+                        <h3>{{ product.name }}</h3>
+
+                        <p class="price">
+                            ₦{{ "{:,.0f}".format(product.price) }}
+                        </p>
+
+                        <p class="product-description">
+                            {{ product.description }}
+                        </p>
+
+                        <a
+                            href="{{ url_for('add_to_cart', product_id=product.id) }}"
+                            class="cart-button"
+                        >
+                            Add to Cart
+                        </a>
+
+                    </article>
+
+                {% else %}
+
+                    <p>No products available yet. Please check back soon!</p>
+
+                {% endfor %}
+
+            </div>
+
+            <p style="margin-top: 25px;">
+                <a href="{{ url_for('shop') }}" class="shop-button">
+                    VIEW ALL SHOES →
+                </a>
+            </p>
+
+        </section>
+
+        <!-- DELIVERY INFORMATION -->
+        <section class="section">
+            <h2 class="section-title">Why Shop With DK Shoes?</h2>
+
+            <div class="categories">
+
+                <div class="category">
+                    <h3>👟 Quality Footwear</h3>
+                    <p>Explore our available shoe collection.</p>
+                </div>
+
+                <div class="category">
+                    <h3>🚚 Nationwide Delivery</h3>
+                    <p>Delivery service across Nigeria.</p>
+                </div>
+
+                <div class="category">
+                    <h3>💬 Customer Support</h3>
+                    <p>Contact us for help with your order.</p>
+                </div>
+
+                <div class="category">
+                    <h3>🛍️ Easy Shopping</h3>
+                    <p>Browse products and add your favourites to your cart.</p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="footer-content">
+
+            <div>
+                <h3>DK SHOES</h3>
+                <p>DAN KABO SHOES Nig. Ltd.</p>
+                <p>Quality footwear for every occasion.</p>
+            </div>
+
+            <div>
+                <h3>Customer Service</h3>
+                <p><a href="{{ url_for('shop') }}">Shop Shoes</a></p>
+                <p><a href="{{ url_for('account') }}">My Account</a></p>
+                <p><a href="{{ url_for('cart') }}">Shopping Cart</a></p>
+            </div>
+
+            <div>
+                <h3>Contact Us</h3>
+                <p>Kano, Zoo Road, Amana Plaza, Nigeria</p>
+                <p>
+                    WhatsApp:
+                    <a href="https://wa.me/2349072488838"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        09072488838
+                    </a>
+                </p>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 DAN KABO SHOES Nig. Ltd. All rights reserved.</p>
+        </div>
+
+    </footer>
+
+</body>
+</html>
+```

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | DK Shoes</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <a href="{{ url_for('home') }}" class="logo">
+            DK <span>SHOES</span>
+        </a>
+
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('shop') }}">Shop</a>
+            <a href="{{ url_for('account') }}">Account</a>
+            <a href="{{ url_for('cart') }}">🛒 Cart</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">🛒 Your Shopping Cart</h1>
+
+        <div class="cart-container">
+
+            {% if products %}
+
+                {% for item in products %}
+
+                    <div class="cart-item">
+
+                        <div>
+                            {% if item.product.image %}
+                                <img
+                                    src="{{ url_for('static', filename='images/' + item.product.image) }}"
+                                    alt="{{ item.product.name }}"
+                                    style="width:100px;height:100px;object-fit:contain;"
+                                >
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <h3>{{ item.product.name }}</h3>
+
+                            <p class="price">
+                                Unit Price:
+                                ₦{{ "{:,.2f}".format(item.product.price|float) }}
+                            </p>
+
+                            <p>Quantity: {{ item.quantity }}</p>
+
+                            <p>
+                                Subtotal:
+                                ₦{{ "{:,.2f}".format(item.subtotal|float) }}
+                            </p>
+
+                            <form
+                                action="{{ url_for('remove_from_cart', product_id=item.product.id) }}"
+                                method="POST"
+                            >
+                                <button type="submit" class="remove-button">
+                                    Remove from Cart
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+                <h2 class="cart-total">
+                    Total Price: ₦{{ "{:,.2f}".format(total|float) }}
+                </h2>
+
+                <div style="display:flex;gap:15px;flex-wrap:wrap;margin-top:20px;">
+
+                    <a href="{{ url_for('shop') }}" class="shop-button">
+                        Continue Shopping
+                    </a>
+
+                    <a href="{{ url_for('checkout') }}" class="shop-button">
+                        Proceed to Checkout →
+                    </a>
+
+                </div>
+
+            {% else %}
+
+                <div style="text-align:center;padding:40px 15px;">
+                    <h2>Your cart is empty!</h2>
+                    <p>You haven't added any shoes to your cart yet.</p>
+
+                    <a href="{{ url_for('shop') }}" class="shop-button">
+                        Start Shopping
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <h3>DK SHOES</h3>
+        <p>DAN KABO SHOES Nig. Ltd.</p>
+        <p>Kano, Zoo Road, Amana Plaza, Nigeria</p>
+        <p>WhatsApp: 09072488838</p>
+        <p>© 2026 DAN KABO SHOES Nig. Ltd.</p>
+    </footer>
+
+</body>
+</html>

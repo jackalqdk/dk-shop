@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DK Shoes | Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+    body {
+        background: #f5f5f5;
+        color: #222;
+        font-family: Arial, sans-serif;
+    }
+
+    .admin-header {
+        background: #654321;
+        color: white;
+        padding: 22px 5%;
+    }
+
+    .admin-header h1 {
+        margin: 0;
+        font-size: 26px;
+    }
+
+    .admin-header p {
+        margin-bottom: 0;
+    }
+
+    .admin-container {
+        max-width: 850px;
+        margin: 35px auto;
+        padding: 0 18px;
+    }
+
+    .admin-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 18px rgba(0,0,0,.08);
+    }
+
+    .admin-card h2 {
+        color: #123b65;
+        margin-top: 0;
+    }
+
+    .admin-card label {
+        display: block;
+        margin: 16px 0 7px;
+        font-weight: bold;
+    }
+
+    .admin-card input,
+    .admin-card textarea,
+    .admin-card select {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: #fff;
+        box-sizing: border-box;
+    }
+
+    .admin-card textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .admin-card button {
+        width: 100%;
+        margin-top: 24px;
+        padding: 15px;
+        background: #654321;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .admin-card button:hover {
+        background: #123b65;
+    }
+
+    .admin-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .admin-links a {
+        display: inline-block;
+        padding: 11px 16px;
+        background: #123b65;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .admin-links a:hover {
+        background: #654321;
+    }
+
+    .admin-note {
+        color: #666;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+        .admin-card {
+            padding: 20px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header class="admin-header">
+    <h1>DK SHOES — Admin Dashboard</h1>
+    <p>DAN KABO SHOES Nig. Ltd.</p>
+</header>
+
+<main class="admin-container">
+
+    <div class="admin-links">
+    <a href="{{ url_for('shop') }}">View Shop</a>
+    <a href="{{ url_for('home') }}">Home Page</a>
+    <a href="{{ url_for('admin_orders') }}">
+    📦 Manage Customer Orders
+</a>
+</div>
+
+<section class="admin-card">
+    <h2>Add a New Shoe</h2>
+    <p>Enter your product details below to add a shoe to your online store.</p>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <label for="name">Product Name</label>
+        <input type="text" id="name" name="name"
+               placeholder="e.g. DK Classic Leather Shoe" required>
+
+        <label for="price">Price (₦)</label>
+        <input type="number" id="price" name="price"
+               min="0" step="0.01" placeholder="e.g. 25000" required>
+
+        <label for="description">Product Description</label>
+        <textarea id="description" name="description"
+                  placeholder="Describe the shoe, material, comfort and style."></textarea>
+
+        <label for="image">Product Photo</label>
+        <input type="file" id="image" name="image" accept="image/*">
+
+        <p class="admin-note">
+            Use a clear photo of the shoe. Make sure you have permission
+            to use the image in your shop.
+        </p>
+
+        <button type="submit">＋ ADD PRODUCT TO SHOP</button>
+
+    </form>
+</section>
+<section class="admin-card" style="margin-top: 30px;">
+    <a href="{{ url_for('admin_orders') }}" style="display:inline-block; background:#654321; color:white; padding:12px 20px; border-radius:6px; text-decoration:none; margin-bottom:20px;">
+    📦 Manage Customer Orders
+</a>
+
+    <h2>Manage Your Products</h2>
+
+    <p>View, edit, and delete shoes in your store.</p>
+
+    {% for product in products %}
+        <div style="border-bottom: 1px solid #ddd; padding: 20px 0;">
+
+            <h3>{{ product.name }}</h3>
+
+            <p>
+                Price: ₦{{ "{:,.2f}".format(product.price) }}
+            </p>
+
+            <p>{{ product.description }}</p>
+
+            <img
+                src="{{ url_for('static', filename='images/' + product.image) }}"
+                alt="{{ product.name }}"
+                style="width: 120px; height: 120px; object-fit: contain;"
+            >
+
+            <div class="admin-links">
+                <a href="{{ url_for('edit_product', product_id=product.id) }}">
+                    Edit Product
+                </a>
+
+                <form
+                    action="{{ url_for('delete_product', product_id=product.id) }}"
+                    method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete this product?');"
+                >
+                    <button type="submit" style="margin-top: 0;">
+                        Delete Product
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    {% else %}
+        <p>No products have been added yet.</p>
+    {% endfor %}
+</section>
+
+</main>
+
+</body>
+</html>

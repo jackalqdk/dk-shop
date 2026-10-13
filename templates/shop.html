@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Shoes | DK Shoes</title>
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #f5f5f5;
+        color: #333;
+        font-family: Arial, sans-serif;
+    }
+
+    .top-bar {
+        background: #c45e1f;
+        color: white;
+        padding: 10px 5%;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .header {
+        background: #fff;
+        padding: 18px 5%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 25px;
+        flex-wrap: wrap;
+        border-bottom: 1px solid #e8e3dd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+    }
+
+    .logo {
+        color: #654321;
+        font-size: 36px;
+        font-weight: 900;
+        letter-spacing: -2px;
+        text-decoration: none;
+    }
+
+    .logo span {
+        color: #123b65;
+    }
+
+    .search {
+        display: flex;
+        flex: 1 1 400px;
+        max-width: 650px;
+        min-width: 0;
+        height: 42px;
+    }
+
+    .search input {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-right: none;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        font-size: 14px;
+    }
+
+    .search input:focus {
+        border-color: #123b65;
+    }
+
+    .search button {
+        flex: 0 0 85px;
+        padding: 0 8px;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        background: #123b65;
+        color: white;
+        font-size: 11px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .search button:hover {
+        background: #654321;
+    }
+
+    .navigation {
+        background: #654321;
+        padding: 15px 5%;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .navigation a {
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .navigation a:hover {
+        color: #e8c99e;
+    }
+
+    .luxury-banner {
+        min-height: 390px;
+        width: 100%;
+        padding: 55px 7%;
+        display: flex;
+        align-items: center;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(30, 17, 9, .97) 0%,
+                rgba(30, 17, 9, .83) 43%,
+                rgba(30, 17, 9, .12) 100%
+            ),
+            url("https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=1800&q=85")
+            center 55% / cover no-repeat;
+        color: white;
+    }
+
+    .banner-content {
+        max-width: 540px;
+    }
+
+    .banner-label {
+        color: #d8ad72;
+        font-size: 11px;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+    }
+
+    .luxury-banner h1 {
+        font-family: Georgia, serif;
+        font-size: clamp(36px, 5vw, 62px);
+        line-height: 1.12;
+        margin: 0 0 18px;
+    }
+
+    .luxury-banner h1 span {
+        color: #d8ad72;
+    }
+
+    .banner-description {
+        color: #f0e6da;
+        line-height: 1.8;
+        margin-bottom: 25px;
+    }
+
+    .shop-now {
+        display: inline-block;
+        padding: 14px 25px;
+        background: #d8ad72;
+        color: #21170f;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+    }
+
+    .shop-now:hover {
+        background: white;
+    }
+
+    .container {
+        width: 94%;
+        margin: 20px auto 45px;
+    }
+
+    .section-heading {
+        background: white;
+        padding: 20px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        border-bottom: 2px solid #654321;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        color: #654321;
+        font-size: 23px;
+    }
+
+    .section-heading span {
+        color: #666;
+        font-size: 13px;
+    }
+
+    .products {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .product {
+        background: white;
+        min-width: 0;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: box-shadow .25s, transform .25s;
+    }
+
+    .product:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .12);
+        transform: translateY(-3px);
+    }
+
+    .product-image {
+        height: 230px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 12px;
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        transition: transform .3s ease;
+    }
+
+    .product:hover .product-image img {
+        transform: scale(1.05);
+    }
+
+    .placeholder {
+        font-size: 65px;
+    }
+
+    .product-details {
+        padding: 16px;
+    }
+
+    .product-details h3 {
+        font-size: 15px;
+        font-weight: 500;
+        margin: 0 0 10px;
+        overflow-wrap: anywhere;
+    }
+
+    .description {
+        color: #777;
+        font-size: 12px;
+        line-height: 1.6;
+        min-height: 38px;
+    }
+
+    .price {
+        color: #593d2b;
+        font-size: 19px;
+        font-weight: bold;
+        margin: 15px 0;
+    }
+
+    .add-button {
+        display: block;
+        width: 100%;
+        background: #123b65;
+        color: white;
+        padding: 13px 8px;
+        text-align: center;
+        border: none;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .add-button:hover {
+        background: #654321;
+    }
+
+    .add-button:disabled {
+        opacity: .7;
+        cursor: wait;
+    }
+
+    .empty {
+        background: white;
+        text-align: center;
+        padding: 55px 20px;
+        grid-column: 1 / -1;
+    }
+
+    .empty h2 {
+        color: #593d2b;
+    }
+
+    .empty p {
+        color: #777;
+        line-height: 1.7;
+    }
+
+    .admin-button {
+        display: inline-block;
+        background: #593d2b;
+        color: white;
+        padding: 13px 20px;
+        text-decoration: none;
+    }
+
+    .benefits {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+        background: white;
+        padding: 25px 5%;
+    }
+
+    .benefits div {
+        font-size: 13px;
+    }
+
+    .footer {
+        background: #211b17;
+        color: white;
+        text-align: center;
+        padding: 35px 15px;
+        line-height: 1.8;
+    }
+
+    .footer p {
+        color: #d6c9bc;
+        font-size: 12px;
+    }
+
+    .cart-message {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: #183f2a;
+        color: white;
+        padding: 14px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
+        max-width: calc(100% - 40px);
+        font-size: 14px;
+    }
+
+    @media (max-width: 950px) {
+        .products {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .product-image {
+            height: 210px;
+        }
+    }
+
+    @media (max-width: 650px) {
+        .header {
+            gap: 14px;
+        }
+
+        .search {
+            order: 3;
+            flex-basis: 100%;
+            max-width: none;
+        }
+
+        .navigation {
+            gap: 17px;
+        }
+
+        .products {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .product-image {
+            height: 175px;
+        }
+
+        .product-details {
+            padding: 12px;
+        }
+
+        .product-details h3 {
+            font-size: 14px;
+        }
+
+        .price {
+            font-size: 17px;
+        }
+
+        .luxury-banner {
+            min-height: 340px;
+            padding: 40px 7%;
+            background-position: 62% center;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .products {
+            grid-template-columns: 1fr;
+        }
+
+        .product-image {
+            height: 230px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="top-bar">
+    WELCOME TO DK SHOES — QUALITY SHOES FOR EVERYONE
+</div>
+
+<header class="header">
+    <a href="{{ url_for('home') }}" class="logo">d<span>k</span></a>
+
+    <form action="{{ url_for('shop') }}" method="GET" class="search">
+        <input
+            type="search"
+            name="q"
+            placeholder="Search for shoes..."
+            value="{{ search }}"
+            aria-label="Search for shoes"
+        >
+        <button type="submit">SEARCH</button>
+    </form>
+</header>
+
+<nav class="navigation">
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('shop') }}">All Shoes</a>
+    <a href="{{ url_for('categories') }}">Categories</a>
+    <a href="{{ url_for('cart') }}">My Cart</a>
+    <a href="{{ url_for('account') }}">My Account</a>
+</nav>
+
+<div class="cart-message" id="cartMessage" role="status" aria-live="polite"></div>
+
+<section class="luxury-banner">
+    <div class="banner-content">
+        <p class="banner-label">THE DK PREMIUM COLLECTION</p>
+
+        <h1>
+            Classic Style.<br>
+            <span>Modern Comfort.</span>
+        </h1>
+
+        <p class="banner-description">
+            Discover premium footwear crafted for your everyday journey.
+        </p>
+
+        <a href="#products" class="shop-now">SHOP NOW →</a>
+    </div>
+</section>
+
+<main class="container" id="products">
+
+    <div class="section-heading">
+        <h2>
+            {% if search %}
+                Search Results
+            {% else %}
+                Shop All Shoes
+            {% endif %}
+        </h2>
+
+        <span>{{ products|length }} products available</span>
+    </div>
+
+    <div class="products">
+
+        {% for product in products %}
+
+            <article class="product">
+
+                <div class="product-image">
+                    {% if product.image %}
+                        <img
+                            src="{{ url_for('static', filename='images/' ~ product.image) }}"
+                            alt="{{ product.name }}"
+                            loading="lazy"
+                        >
+                    {% else %}
+                        <span class="placeholder">👞</span>
+                    {% endif %}
+                </div>
+
+                <div class="product-details">
+
+                    <h3>{{ product.name }}</h3>
+
+                    <div class="description">
+                        {{ product.description or 'Quality shoes for everyday comfort and style.' }}
+                    </div>
+
+                    <div class="price">
+                        ₦{{ "{:,.2f}".format(product.price|float) }}
+                    </div>
+
+                    <button
+                        type="button"
+                        class="add-button"
+                        data-add-url="{{ url_for('add_to_cart', product_id=product.id) }}"
+                        onclick="addToCart(this)"
+                    >
+                        ADD TO CART 🛒
+                    </button>
+
+                </div>
+            </article>
+
+        {% else %}
+
+            <div class="empty">
+                <h2>
+                    {% if search %}
+                        No shoes found
+                    {% else %}
+                        Your shoe collection is waiting!
+                    {% endif %}
+                </h2>
+
+                <p>
+                    {% if search %}
+                        Try searching with a different shoe name.
+                    {% else %}
+                        There are no products to display yet.
+                        Sign in with your administrator account and open
+                        the Admin page to add shoes, prices, descriptions,
+                        and product photos.
+                    {% endif %}
+                </p>
+
+                {% if not search %}
+                    <a href="{{ url_for('admin') }}" class="admin-button">
+                        GO TO ADMIN
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('shop') }}" class="admin-button">
+                        VIEW ALL SHOES
+                    </a>
+                {% endif %}
+            </div>
+
+        {% endfor %}
+
+    </div>
+</main>
+
+<section class="benefits">
+    <div>👟 <strong>Quality Footwear</strong></div>
+    <div>🚚 <strong>Delivery Across Nigeria</strong></div>
+    <div>💳 <strong>Convenient Payment Options</strong></div>
+    <div>💬 <strong>Customer Support</strong></div>
+</section>
+
+<footer class="footer">
+    <a href="{{ url_for('home') }}" class="logo" style="color:white">
+        d<span>k</span>
+    </a>
+
+    <p>DAN KABO SHOES Nig. Ltd.</p>
+    <p>Kano, Zoo Road, Amana Plaza, Nigeria</p>
+    <p>WhatsApp: 09072488838</p>
+
+    <p>© 2026 DK Shoes. All rights reserved.</p>
+</footer>
+
+<script>
+    let cartMessageTimer;
+
+    async function addToCart(button) {
+        const originalText = button.textContent.trim();
+        const productUrl = button.dataset.addUrl;
+        const message = document.getElementById("cartMessage");
+
+        if (!productUrl) {
+            message.textContent = "Unable to identify this product.";
+            message.style.display = "block";
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Adding...";
+
+        try {
+            const response = await fetch(productUrl, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Accept": "application/json"
+                },
+                credentials: "same-origin",
+                redirect: "follow"
+            });
+
+            if (!response.ok) {
+                throw new Error("The server could not add this product.");
+            }
+
+            const contentType = response.headers.get("content-type") || "";
+
+            if (!contentType.includes("application/json")) {
+                throw new Error(
+                    "The server response needs an update. Check the add_to_cart route in app.py."
+                );
+            }
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.message || "Could not add this product.");
+            }
+
+            button.textContent = "✓ Added to Cart!";
+
+            message.textContent = result.message || "Shoe added to your cart.";
+            message.style.display = "block";
+
+            clearTimeout(cartMessageTimer);
+
+            cartMessageTimer = setTimeout(() => {
+                message.style.display = "none";
+            }, 3000);
+
+        } catch (error) {
+            button.textContent = "Try Again";
+
+            message.textContent = error.message || "Something went wrong.";
+            message.style.display = "block";
+
+            clearTimeout(cartMessageTimer);
+
+            cartMessageTimer = setTimeout(() => {
+                message.style.display = "none";
+            }, 5000);
+
+        } finally {
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.disabled = false;
+            }, 1800);
+        }
+    }
+</script>
+
+</body>
+</html>

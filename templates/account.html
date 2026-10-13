@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DK Shoes - Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+<style>
+    .admin-link {
+        margin-top: 20px;
+        padding: 20px;
+        background: #f4eee7;
+        border: 1px solid #654321;
+        border-radius: 8px;
+    }
+
+    .admin-button {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 12px 20px;
+        background: #654321;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .admin-button:hover {
+        background: #463017;
+    }
+</style>
+
+
+</head>
+
+<body>
+
+<header class="main-header">
+    <div class="logo">DK SHOES</div>
+
+
+<nav>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('shop') }}">Shop</a>
+    <a href="{{ url_for('categories') }}">Categories</a>
+    <a href="{{ url_for('cart') }}">🛒 Cart</a>
+    <a href="{{ url_for('account') }}">Account</a>
+</nav>
+
+</header>
+
+<section class="section">
+
+{% if session.get("user_id") %}
+
+    <h1>My Account</h1>
+
+    <div class="account-box">
+        <h2>Welcome, {{ session.get("user_name") }} 👋</h2>
+        <p>You are successfully logged in to DK Shoes.</p>
+
+        <div class="account-options">
+
+            <a href="{{ url_for('orders') }}" class="account-option">
+                📦
+                <strong>My Orders</strong>
+                <span>View your orders</span>
+            </a>
+
+            <a href="{{ url_for('profile') }}" class="account-option">
+                👤
+                <strong>My Profile</strong>
+                <span>Manage your profile</span>
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="account-option logout-option">
+                🚪
+                <strong>Logout</strong>
+                <span>Sign out of your account</span>
+            </a>
+
+        </div>
+
+        {% if is_admin() %}
+            <div class="admin-link">
+                <h3>🔐 Store Management</h3>
+                <p>Welcome to your private DK Shoes management area.</p>
+
+                <a href="{{ url_for('admin') }}" class="admin-button">
+                    Open Admin Dashboard
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+
+{% else %}
+
+    <h1>My Account</h1>
+
+    <div class="account-box">
+        <h2>Welcome to DK Shoes</h2>
+        <p>Login or create an account to continue.</p>
+
+        <div class="account-options">
+
+            <a href="{{ url_for('login') }}" class="account-option">
+                🔐
+                <strong>Login</strong>
+                <span>Sign in to your account</span>
+            </a>
+
+            <a href="{{ url_for('register') }}" class="account-option">
+                👤
+                <strong>Create Account</strong>
+                <span>Create a new account</span>
+            </a>
+
+        </div>
+    </div>
+
+{% endif %}
+
+</section>
+
+<footer>
+    <h3>DK Shoes</h3>
+    <p>Kano, Zoo Road, Amana Plaza</p>
+    <p>WhatsApp: 09072488838</p>
+    <p>© 2026 DAN KABO SHOES Nig. Ltd.</p>
+</footer>
+
+</body>
+</html>
