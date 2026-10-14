@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DK Shoes - Account</title>
+    <title>DK Shoes - My Account</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
 
@@ -30,6 +30,51 @@
     .admin-button:hover {
         background: #463017;
     }
+
+    .order-history {
+        margin-top: 30px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .order-card {
+        margin-top: 15px;
+        padding: 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .order-card p {
+        margin: 8px 0;
+    }
+
+    .order-status {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #f4eee7;
+        color: #654321;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .order-button {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 16px;
+        background: #654321;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .empty-orders {
+        margin-top: 15px;
+        padding: 15px;
+        background: #f8f8f8;
+        border-radius: 8px;
+    }
 </style>
 
 
@@ -49,77 +94,139 @@
     <a href="{{ url_for('account') }}">Account</a>
 </nav>
 
+
 </header>
 
 <section class="section">
 
-{% if session.get("user_id") %}
+{% if user %}
 
-    <h1>My Account</h1>
 
-    <div class="account-box">
-        <h2>Welcome, {{ session.get("user_name") }} 👋</h2>
-        <p>You are successfully logged in to DK Shoes.</p>
+<h1>My Account</h1>
 
-        <div class="account-options">
+<div class="account-box">
+    <h2>Welcome, {{ user.name }} 👋</h2>
+    <p>You are successfully logged in to DK Shoes.</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
 
-            <a href="{{ url_for('orders') }}" class="account-option">
-                📦
-                <strong>My Orders</strong>
-                <span>View your orders</span>
-            </a>
+    <div class="account-options">
 
-            <a href="{{ url_for('profile') }}" class="account-option">
-                👤
-                <strong>My Profile</strong>
-                <span>Manage your profile</span>
-            </a>
+        <a href="{{ url_for('orders') }}" class="account-option">
+            📦
+            <strong>My Orders</strong>
+            <span>View your complete order history</span>
+        </a>
 
-            <a href="{{ url_for('logout') }}" class="account-option logout-option">
-                🚪
-                <strong>Logout</strong>
-                <span>Sign out of your account</span>
-            </a>
+        <a href="{{ url_for('profile') }}" class="account-option">
+            👤
+            <strong>My Profile</strong>
+            <span>Manage your profile</span>
+        </a>
 
-        </div>
-
-        {% if is_admin() %}
-            <div class="admin-link">
-                <h3>🔐 Store Management</h3>
-                <p>Welcome to your private DK Shoes management area.</p>
-
-                <a href="{{ url_for('admin') }}" class="admin-button">
-                    Open Admin Dashboard
-                </a>
-            </div>
-        {% endif %}
+        <a href="{{ url_for('logout') }}" class="account-option logout-option">
+            🚪
+            <strong>Logout</strong>
+            <span>Sign out of your account</span>
+        </a>
 
     </div>
+
+    {% if is_admin() %}
+        <div class="admin-link">
+            <h3>🔐 Store Management</h3>
+            <p>Welcome to your private DK Shoes management area.</p>
+
+            <a href="{{ url_for('admin') }}" class="admin-button">
+                Open Admin Dashboard
+            </a>
+
+            <a href="{{ url_for('admin_orders') }}" class="admin-button">
+                Manage Customer Orders
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+
+<div class="order-history">
+    <h2>📦 My Recent Orders</h2>
+
+    {% if orders %}
+
+        {% for order in orders[:5] %}
+            <div class="order-card">
+
+                <h3>Order #{{ order.id }}</h3>
+
+                <p>
+                    <strong>Customer:</strong>
+                    {{ order.customer_name }}
+                </p>
+
+                <p>
+                    <strong>Total:</strong>
+                    ₦{{ "%.2f"|format(order.total) }}
+                </p>
+
+                <p>
+                    <strong>Payment:</strong>
+                    {{ order.payment_method }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    <span class="order-status">
+                        {{ order.status or "Pending" }}
+                    </span>
+                </p>
+
+            </div>
+        {% endfor %}
+
+        <a href="{{ url_for('orders') }}" class="order-button">
+            View All My Orders
+        </a>
+
+    {% else %}
+
+        <div class="empty-orders">
+            <p>You haven't placed any orders with this account yet.</p>
+
+            <a href="{{ url_for('shop') }}" class="order-button">
+                Start Shopping
+            </a>
+        </div>
+
+    {% endif %}
+</div>
+
 
 {% else %}
 
-    <h1>My Account</h1>
 
-    <div class="account-box">
-        <h2>Welcome to DK Shoes</h2>
-        <p>Login or create an account to continue.</p>
+<h1>My Account</h1>
 
-        <div class="account-options">
+<div class="account-box">
+    <h2>Welcome to DK Shoes</h2>
+    <p>Login or create an account to continue.</p>
 
-            <a href="{{ url_for('login') }}" class="account-option">
-                🔐
-                <strong>Login</strong>
-                <span>Sign in to your account</span>
-            </a>
+    <div class="account-options">
 
-            <a href="{{ url_for('register') }}" class="account-option">
-                👤
-                <strong>Create Account</strong>
-                <span>Create a new account</span>
-            </a>
+        <a href="{{ url_for('login') }}" class="account-option">
+            🔐
+            <strong>Login</strong>
+            <span>Sign in to your account</span>
+        </a>
 
-        </div>
+        <a href="{{ url_for('register') }}" class="account-option">
+            👤
+            <strong>Create Account</strong>
+            <span>Create a new account</span>
+        </a>
+
     </div>
+</div>
+
 
 {% endif %}
 

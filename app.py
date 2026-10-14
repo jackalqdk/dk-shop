@@ -325,7 +325,6 @@ def remove_from_cart(product_id):
 
     return redirect(url_for("cart"))
 
-
 # ==========================================
 # CHECKOUT
 # ==========================================
@@ -339,20 +338,14 @@ def checkout():
         return redirect(url_for("shop"))
 
     if request.method == "POST":
-        # Accept either field name used by the checkout template.
         name = (
             request.form.get("customer_name")
             or request.form.get("name")
             or ""
         ).strip()
 
-        phone = request.form.get(
-            "phone", ""
-        ).strip()
-
-        address = request.form.get(
-            "address", ""
-        ).strip()
+        phone = request.form.get("phone", "").strip()
+        address = request.form.get("address", "").strip()
 
         payment_method = request.form.get(
             "payment_method",
@@ -366,7 +359,6 @@ def checkout():
 
         if not name or not phone or not address:
             flash("Please complete all delivery details.")
-
             return render_template(
                 "checkout.html",
                 products=products,
@@ -375,15 +367,17 @@ def checkout():
 
         if payment_method not in allowed_payment_methods:
             flash("Please select a valid payment method.")
-
             return render_template(
                 "checkout.html",
                 products=products,
                 total=total
             )
 
-        # This stores the order; it does not process online payments.
+        # Link the order to the logged-in customer.
+        user = current_user()
+
         order = Order(
+            user_id=user.id if user else None,
             customer_name=name,
             phone=phone,
             address=address,
@@ -666,11 +660,17 @@ def account():
     if not user:
         return redirect(url_for("login"))
 
+    customer_orders = Order.query.filter_by(
+        user_id=user.id
+    ).order_by(
+        Order.id.desc()
+    ).all()
+
     return render_template(
         "account.html",
-        user=user
+        user=user,
+        orders=customer_orders
     )
-
 
 # ==========================================
 # CUSTOMER PROFILE
@@ -734,21 +734,27 @@ def logout():
 
 @app.route("/orders")
 def orders():
-    if not is_admin():
-        if not current_user():
-            return redirect(url_for("login"))
+    user = current_user()
 
-        return "Access denied: administrators only.", 403
+    if not user:
+        return redirect(url_for("login"))
 
-    all_orders = Order.query.order_by(
-        Order.id.desc()
-    ).all()
+    # Administrators can view all orders.
+    if is_admin():
+        all_orders = Order.query.order_by(
+            Order.id.desc()
+        ).all()
+
+    # Customers can view only their own orders.
+    else:
+        all_orders = Order.query.filter_by(
+            user_id=user.id
+        ).order_by(Order.id.desc()).all()
 
     return render_template(
         "orders.html",
         orders=all_orders
     )
-
 
 # ==========================================
 # ADMIN DASHBOARD
