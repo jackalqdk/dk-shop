@@ -88,6 +88,24 @@ google = oauth.register(
 
 with app.app_context():
     db.create_all()
+    # Auto-fix old DB missing columns
+    try:
+        from sqlalchemy import inspect, text
+        inspector = inspect(db.engine)
+        if 'order' in inspector.get_table_names():
+            cols = [c['name'] for c in inspector.get_columns('order')]
+            if 'user_id' not in cols:
+                with db.engine.connect() as conn:
+                    conn.execute(text('ALTER TABLE "order" ADD COLUMN user_id INTEGER'))
+                    conn.commit()
+                print("FIXED: Added user_id column to order table")
+            if 'status' not in cols:
+                with db.engine.connect() as conn:
+                    conn.execute(text('ALTER TABLE "order" ADD COLUMN status VARCHAR(20) DEFAULT "Pending"'))
+                    conn.commit()
+                print("FIXED: Added status column to order table")
+    except Exception as e:
+        print(f"Migration check failed: {e}")
 
 
 # ==========================================
