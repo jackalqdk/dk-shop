@@ -137,6 +137,9 @@ def is_admin():
 def inject_admin_status():
     return {"is_admin": is_admin}
 
+@app.route('/googledc57c5c4d08a9272.html')
+def google_verify():
+    return "google-site-verification: googledc57c5c4d08a9272.html"
 
 def password_reset_serializer():
     return URLSafeTimedSerializer(
